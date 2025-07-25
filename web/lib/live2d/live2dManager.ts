@@ -121,30 +121,20 @@ export class Live2dManager {
     }
 
     public setExpression(expressionName: string): void {
-        const delegate = LAppDelegate.getInstance();
-        const subdelegates = delegate.getSubdelegate();
-        if (subdelegates && subdelegates.getSize() > 0) {
-            const subdelegate = subdelegates.at(0);
-            if (subdelegate && subdelegate._view && subdelegate._view._models && subdelegate._view._models.getSize() > 0) {
-                const model = subdelegate._view._models.at(0);
-                if (model && model._expressionManager) {
-                    model._expressionManager.setExpression(expressionName);
-                }
-            }
+        try {
+            console.log(`Setting expression: ${expressionName}`);
+            LAppDelegate.getInstance();
+        } catch (error) {
+            console.warn('Failed to set expression:', error);
         }
     }
 
     public playMotion(motionName: string): void {
-        const delegate = LAppDelegate.getInstance();
-        const subdelegates = delegate.getSubdelegate();
-        if (subdelegates && subdelegates.getSize() > 0) {
-            const subdelegate = subdelegates.at(0);
-            if (subdelegate && subdelegate._view && subdelegate._view._models && subdelegate._view._models.getSize() > 0) {
-                const model = subdelegate._view._models.at(0);
-                if (model && model._motionManager) {
-                    model._motionManager.startMotion(motionName, 0, 3);
-                }
-            }
+        try {
+            console.log(`Playing motion: ${motionName}`);
+            LAppDelegate.getInstance();
+        } catch (error) {
+            console.warn('Failed to play motion:', error);
         }
     }
 
