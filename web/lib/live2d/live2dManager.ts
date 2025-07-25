@@ -106,4 +106,65 @@ export class Live2dManager {
     private _audioSource: AudioBufferSourceNode | null;
     private _lipFactor: number;
     private _ready: boolean;
+
+    public setEmotion(emotion: string): void {
+        const emotionMap: { [key: string]: string } = {
+            'happy': '开心',
+            'sad': '难过', 
+            'surprised': '惊讶',
+            'confused': '疑惑',
+            'neutral': '微笑'
+        };
+        
+        const expressionName = emotionMap[emotion] || '微笑';
+        this.setExpression(expressionName);
+    }
+
+    public setExpression(expressionName: string): void {
+        try {
+            console.log(`Setting expression: ${expressionName}`);
+            LAppDelegate.getInstance();
+        } catch (error) {
+            console.warn('Failed to set expression:', error);
+        }
+    }
+
+    public playMotion(motionName: string): void {
+        try {
+            console.log(`Playing motion: ${motionName}`);
+            LAppDelegate.getInstance();
+        } catch (error) {
+            console.warn('Failed to play motion:', error);
+        }
+    }
+
+    public setEmotionWithMotion(emotion: string, intensity: number = 1.0): void {
+        this.setEmotion(emotion);
+        
+        const motionMap: { [key: string]: string } = {
+            'happy': intensity > 0.7 ? '开心-眯眼笑着说话' : '微笑-看着你',
+            'sad': '难过-叹气看地上',
+            'surprised': '惊吓-瞪眼',
+            'confused': '疑惑-歪头',
+            'neutral': '微笑-平淡'
+        };
+        
+        const motionName = motionMap[emotion] || '微笑-平淡';
+        this.playMotion(motionName);
+    }
+
+    public updateEmotionFromResponse(response: string, emotion: string): void {
+        const intensity = this.analyzeEmotionIntensity(response);
+        this.setEmotionWithMotion(emotion, intensity);
+    }
+
+    private analyzeEmotionIntensity(response: string): number {
+        let intensity = 0.5;
+        
+        if (response.includes('！') || response.includes('!')) intensity += 0.2;
+        if (response.includes('？？') || response.includes('??')) intensity += 0.3;
+        if (response.includes('哈哈') || response.includes('呵呵')) intensity += 0.3;
+        
+        return Math.min(intensity, 1.0);
+    }
   }
