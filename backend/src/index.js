@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
 const chatRoutes = require('./routes/chat');
+const engineRoutes = require('./routes/engines');
 const WebSocketService = require('./services/WebSocketService');
 const MCPService = require('./services/MCPService');
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api', engineRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
