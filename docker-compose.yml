@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: digital-human
+
+  backend:
+    build: ./backend
+    ports:
+      - "8880:8880"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/digital-human
+      - JWT_SECRET=your-production-jwt-secret-change-this
+      - DASHSCOPE_API_KEY=sk-c7f36e6ce4ce4709962d1804ca0569c8
+      - DASHSCOPE_API_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./web
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8880/api
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
